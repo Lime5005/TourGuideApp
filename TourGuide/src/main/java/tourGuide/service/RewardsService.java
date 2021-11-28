@@ -1,6 +1,10 @@
 package tourGuide.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.stereotype.Service;
 
@@ -35,20 +39,28 @@ public class RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-	
-	public void calculateRewards(User user) {
+
+	public List<UserReward> calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
-		
-		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(nearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+		List<Attraction> allAttractions = gpsUtil.getAttractions();
+
+		List<UserReward> rewards = new CopyOnWriteArrayList<>();
+		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
+
+		for (Attraction attraction : allAttractions) {
+			for (VisitedLocation userLocation : locations) {
+				if (nearAttraction(userLocation, attraction)) {
+					int points = getRewardPoints(attraction, user);
+					// If user hasn't got the reward yet:
+					if (user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
+						UserReward userReward = new UserReward(userLocation, attraction, points);
+						user.addUserReward(userReward);
+						rewards.add(userReward);
 					}
 				}
 			}
 		}
+		return rewards;
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
