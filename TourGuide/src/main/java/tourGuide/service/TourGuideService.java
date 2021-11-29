@@ -3,6 +3,7 @@ package tourGuide.service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -17,9 +18,11 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.RecommendAttraction;
 import tourGuide.dto.RecommendAttractionsDto;
+import tourGuide.dto.UserPreferencesDto;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -65,6 +68,14 @@ public class TourGuideService {
 	public List<User> getAllUsers() {
 		return internalUserMap.values().stream().collect(Collectors.toList());
 	}
+
+	public Map<String, Location> getAllCurrentLocations() {
+		Map<String, Location> allLocations = new ConcurrentHashMap<>();
+		getAllUsers().forEach(user -> {
+			allLocations.put(user.getUserId().toString(), user.getLastVisitedLocation().location);
+		});
+		return allLocations;
+	}
 	
 	public void addUser(User user) {
 		if(!internalUserMap.containsKey(user.getUserName())) {
@@ -87,6 +98,26 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
+	public UserPreferences getUserPreferences(String userName) {
+		return getUser(userName).getUserPreferences();
+	}
+
+	public UserPreferences updateUserPreferences(UserPreferencesDto userPreferencesDto) {
+		UserPreferences newUserPreferences = new UserPreferences();
+		newUserPreferences.setAttractionProximity(userPreferencesDto.getAttractionProximity());
+		newUserPreferences.setHighPricePoint(userPreferencesDto.getHighPricePoint());
+		newUserPreferences.setLowerPricePoint(userPreferencesDto.getLowerPricePoint());
+		newUserPreferences.setTicketQuantity(userPreferencesDto.getTicketQuantity());
+		newUserPreferences.setTripDuration(userPreferencesDto.getTripDuration());
+		newUserPreferences.setNumberOfAdults(userPreferencesDto.getNumberOfAdults());
+		newUserPreferences.setNumberOfChildren(userPreferencesDto.getNumberOfChildren());
+
+		String userName = userPreferencesDto.getUserName();
+		User user = getUser(userName);
+		user.setUserPreferences(newUserPreferences);
+
+		return newUserPreferences;
+	}
 
 	public RecommendAttractionsDto getRecommendAttractions(String userName) {
 		RecommendAttractionsDto recommendAttractionsDto = new RecommendAttractionsDto();

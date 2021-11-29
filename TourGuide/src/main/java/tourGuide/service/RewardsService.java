@@ -2,9 +2,7 @@ package tourGuide.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.stereotype.Service;
 
@@ -44,7 +42,6 @@ public class RewardsService {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
 
-		List<UserReward> rewards = new CopyOnWriteArrayList<>();
 		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
 
 		for (Attraction attraction : allAttractions) {
@@ -54,13 +51,13 @@ public class RewardsService {
 					// If user hasn't got the reward yet:
 					if (user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
 						UserReward userReward = new UserReward(userLocation, attraction, points);
+						System.out.println("points = " + points);//points = 901
 						user.addUserReward(userReward);
-						rewards.add(userReward);
 					}
 				}
 			}
 		}
-		return rewards;
+		return user.getUserRewards();
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {

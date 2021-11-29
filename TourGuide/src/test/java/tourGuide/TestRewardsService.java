@@ -42,6 +42,7 @@ public class TestRewardsService {
 		tourGuideService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
 		tourGuideService.tracker.stopTracking();
+		System.out.println("rewards = " + userRewards.size());//rewards = 1, TourGuideService.trackUserLocation()
 		assertTrue(userRewards.size() == 1);
 	}
 	

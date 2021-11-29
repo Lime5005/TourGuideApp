@@ -1,19 +1,22 @@
 package tourGuide;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jsoniter.output.JsonStream;
 
 import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.RecommendAttractionsDto;
+import tourGuide.dto.UserPreferencesDto;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tripPricer.Provider;
 
 @RestController
@@ -64,8 +67,20 @@ public class TourGuideController {
     	//        "019b04a9-067a-4c76-8817-ee75088c3822": {"longitude":-48.188821,"latitude":74.84371} 
     	//        ...
     	//     }
-    	
-    	return JsonStream.serialize("");
+        Map<String, Location> allCurrentLocations = tourGuideService.getAllCurrentLocations();
+        return JsonStream.serialize(allCurrentLocations);
+    }
+
+    @RequestMapping("/getUserPreferences")
+    public String getUserPreferences(@RequestParam String userName) {
+        UserPreferences userPreferences = tourGuideService.getUserPreferences(userName);
+        return JsonStream.serialize(userPreferences);
+    }
+
+    @PostMapping("/updateUserPreferences")
+    public String updateUserPreferences(@RequestBody UserPreferencesDto userPreferencesDto) {
+        UserPreferences userPreferences = tourGuideService.updateUserPreferences(userPreferencesDto);
+        return JsonStream.serialize(userPreferences);
     }
     
     @RequestMapping("/getTripDeals")
