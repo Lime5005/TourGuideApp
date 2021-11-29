@@ -2,13 +2,8 @@ package tourGuide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -20,6 +15,8 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tourGuide.dto.RecommendAttraction;
+import tourGuide.dto.RecommendAttractionsDto;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
@@ -90,15 +87,44 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
+
+	public RecommendAttractionsDto getRecommendAttractions(String userName) {
+		RecommendAttractionsDto recommendAttractionsDto = new RecommendAttractionsDto();
+
+		User user = getUser(userName);
+		VisitedLocation visitedLocation = getUser(userName).getLastVisitedLocation();
+		Location location = visitedLocation.location;
+		List<RecommendAttraction> attractions = new CopyOnWriteArrayList<>();
+
+		List<Attraction> nearByAttractions = getNearByAttractions(visitedLocation);
+		for (Attraction attraction : nearByAttractions) {
+			RecommendAttraction recommendAttraction = new RecommendAttraction();
+			recommendAttraction.setName(attraction.attractionName);
+			recommendAttraction.setLocation(attraction.latitude, attraction.longitude);
+			recommendAttraction.setDistance(rewardsService.getDistance(attraction, location));
+			recommendAttraction.setRewardPoints(rewardsService.getRewardPoints(attraction, user));
+			attractions.add(recommendAttraction);
+		}
+		recommendAttractionsDto.setUserLocation(location);
+		recommendAttractionsDto.setAttractionList(attractions);
+
+		return recommendAttractionsDto;
+	}
+
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for(Attraction attraction : gpsUtil.getAttractions()) {
+		List<Attraction> attractions = gpsUtil.getAttractions();
+		// Recommend the closest five tourist attractions:
+		return attractions.stream()
+				.sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))
+				.limit(5)
+				.collect(Collectors.toList());
+
+/*		for(Attraction attraction : gpsUtil.getAttractions()) {
 			if(rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
 				nearbyAttractions.add(attraction);
 			}
-		}
-		
-		return nearbyAttractions;
+		}*/
+
 	}
 	
 	private void addShutDownHook() {
