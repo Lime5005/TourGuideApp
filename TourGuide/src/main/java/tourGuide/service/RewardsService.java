@@ -2,7 +2,9 @@ package tourGuide.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -57,7 +59,6 @@ public class RewardsService {
 		for (Attraction attraction : allAttractions) {
 			for (VisitedLocation userLocation : locations) {
 				if (nearAttraction(userLocation, attraction)) {
-//					CompletableFuture<Integer> points = getRewardPoints(attraction, user);
 					// If user hasn't got the reward yet:
 					if (user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
 						UserReward userReward = new UserReward(userLocation, attraction, 0);
@@ -67,10 +68,9 @@ public class RewardsService {
 				}
 			}
 		}
-		for (UserReward reward : rewards) {
-			CompletableFuture.supplyAsync(() -> getRewardPoints(reward.attraction, user), executorService)
-					.thenAccept((points) -> user.addUserReward(new UserReward(user.getLastVisitedLocation(), reward.attraction, points)));
-		}
+
+		rewards.stream().map(reward -> CompletableFuture.supplyAsync(() -> getRewardPoints(reward.attraction, user), executorService)
+				.thenAccept((points) -> user.addUserReward(new UserReward(user.getLastVisitedLocation(), reward.attraction, points))));
 
 		return user.getUserRewards();
 	}
@@ -84,7 +84,17 @@ public class RewardsService {
 	}
 	
 	public int getRewardPoints(Attraction attraction, User user) {
-		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+		return getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+	}
+
+	private int getAttractionRewardPoints(UUID attractionId, UUID userId) {
+		try {
+			TimeUnit.MILLISECONDS.sleep((long)ThreadLocalRandom.current().nextInt(1, 1000));
+		} catch (InterruptedException var4) {
+		}
+
+		int randomInt = ThreadLocalRandom.current().nextInt(1, 1000);
+		return randomInt;
 	}
 	
 	public double getDistance(Location loc1, Location loc2) {
