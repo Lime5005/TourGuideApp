@@ -10,11 +10,11 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
+import com.lime.feignclient.models.Attraction;
+import com.lime.feignclient.models.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
+import tourGuide.service.GpsUtilFeignService;
+import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
@@ -29,8 +29,8 @@ public class TestRewardsService {
 
 	@Test
 	public void userGetRewards() {
-		GpsUtilService gpsUtil = new GpsUtilService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
 
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
@@ -47,16 +47,16 @@ public class TestRewardsService {
 	
 	@Test
 	public void isWithinAttractionProximity() {
-		GpsUtilService gpsUtil = new GpsUtilService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
+		com.lime.feignclient.models.Attraction attraction = gpsUtil.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 	
 	@Test
 	public void nearAllAttractions() {
-		GpsUtilService gpsUtil = new GpsUtilService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalTestHelper.setInternalUserNumber(1);

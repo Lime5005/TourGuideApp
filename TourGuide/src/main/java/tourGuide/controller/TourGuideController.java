@@ -2,22 +2,20 @@ package tourGuide.controller;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
+import com.lime.feignclient.models.Location;
+import com.lime.feignclient.models.Provider;
+import com.lime.feignclient.models.VisitedLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.jsoniter.output.JsonStream;
 
-import gpsUtil.location.VisitedLocation;
 import tourGuide.dto.RecommendAttractionsDto;
 import tourGuide.dto.UserPreferencesDto;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import tourGuide.user.UserPreferences;
-import tripPricer.Provider;
 
 @RestController
 public class TourGuideController {

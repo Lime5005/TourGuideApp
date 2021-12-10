@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import gpsUtil.location.VisitedLocation;
-import tripPricer.Provider;
+import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.models.Provider;
 
 public class User {
 	private final UUID userId;
@@ -75,9 +75,6 @@ public class User {
 	}
 	
 	public void addUserReward(UserReward userReward) {
-		/*if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction)).count() == 0) {
-			userRewards.add(userReward);
-		}*/
 		userRewards.add(userReward);
 	}
 	

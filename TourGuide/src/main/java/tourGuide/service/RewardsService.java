@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
-import java.util.stream.Stream;
 
+import com.lime.feignclient.api.RewardFeign;
+import com.lime.feignclient.models.Attraction;
+import com.lime.feignclient.models.Location;
+import com.lime.feignclient.models.VisitedLocation;
 import org.springframework.stereotype.Service;
-
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -34,13 +32,12 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-//	private final GpsUtil gpsUtil;
-	private final GpsUtilService gpsUtil;
-	private final RewardCentral rewardCentral;
+	private final GpsUtilFeignService gpsUtil;
+	private final RewardFeignService rewardFeignService;
 	
-	public RewardsService(GpsUtilService gpsUtil, RewardCentral rewardCentral) {
+	public RewardsService(GpsUtilFeignService gpsUtil, RewardFeignService rewardFeignService) {
 		this.gpsUtil = gpsUtil;
-		this.rewardCentral = rewardCentral;
+		this.rewardFeignService = rewardFeignService;
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
@@ -56,7 +53,7 @@ public class RewardsService {
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
  		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
 		List<UserReward> rewards = new ArrayList<>();
-		for (Attraction attraction : allAttractions) {
+		for (com.lime.feignclient.models.Attraction attraction : allAttractions) {
 			for (VisitedLocation userLocation : locations) {
 				if (nearAttraction(userLocation, attraction)) {
 					// If user hasn't got the reward yet:
@@ -75,7 +72,7 @@ public class RewardsService {
 		return user.getUserRewards();
 	}
 	
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+	public boolean isWithinAttractionProximity(Attraction attraction, Attraction location) {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 	

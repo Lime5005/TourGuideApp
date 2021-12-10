@@ -1,7 +1,7 @@
 package tourGuide.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gpsUtil.location.Location;
+import com.lime.feignclient.models.Location;
 
 import java.util.List;
 

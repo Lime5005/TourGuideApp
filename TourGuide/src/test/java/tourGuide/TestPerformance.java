@@ -13,11 +13,13 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Before;
 import org.junit.Test;
 
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
+import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.models.Attraction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilService;
+import tourGuide.service.GpsUtilFeignService;
+import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
@@ -52,8 +54,8 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeTrackLocation() {
-		GpsUtilService gpsUtil = new GpsUtilService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
@@ -77,8 +79,8 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeGetRewards() {
-		GpsUtilService gpsUtil = new GpsUtilService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100000);
