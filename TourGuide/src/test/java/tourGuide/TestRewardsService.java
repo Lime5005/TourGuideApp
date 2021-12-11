@@ -10,15 +10,15 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.lime.feignclient.models.Attraction;
-import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.model.Attraction;
+import com.lime.feignclient.model.VisitedLocation;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.GpsUtilFeignService;
 import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.user.UserReward;
 
 public class TestRewardsService {
 
@@ -49,7 +49,7 @@ public class TestRewardsService {
 	public void isWithinAttractionProximity() {
 		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
-		com.lime.feignclient.models.Attraction attraction = gpsUtil.getAttractions().get(0);
+		com.lime.feignclient.model.Attraction attraction = gpsUtil.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 	

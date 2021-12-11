@@ -1,4 +1,4 @@
-package tourGuide.user;
+package com.lime.feignclient.user;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;

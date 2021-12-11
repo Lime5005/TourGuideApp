@@ -3,19 +3,19 @@ package tourGuide.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.lime.feignclient.models.Location;
-import com.lime.feignclient.models.Provider;
-import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.model.Location;
+import com.lime.feignclient.model.Provider;
+import com.lime.feignclient.model.VisitedLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.jsoniter.output.JsonStream;
 
-import tourGuide.dto.RecommendAttractionsDto;
-import tourGuide.dto.UserPreferencesDto;
+import com.lime.feignclient.dto.RecommendAttractionsDto;
+import com.lime.feignclient.dto.UserPreferencesDto;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
-import tourGuide.user.UserPreferences;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.user.UserPreferences;
 
 @RestController
 public class TourGuideController {

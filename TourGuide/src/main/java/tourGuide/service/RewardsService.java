@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import com.lime.feignclient.api.RewardFeign;
-import com.lime.feignclient.models.Attraction;
-import com.lime.feignclient.models.Location;
-import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.dto.AttractionDto;
+import com.lime.feignclient.model.Attraction;
+import com.lime.feignclient.model.Location;
+import com.lime.feignclient.model.VisitedLocation;
 import org.springframework.stereotype.Service;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.user.UserReward;
 
 @Service
 public class RewardsService {
@@ -53,7 +53,7 @@ public class RewardsService {
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
  		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
 		List<UserReward> rewards = new ArrayList<>();
-		for (com.lime.feignclient.models.Attraction attraction : allAttractions) {
+		for (Attraction attraction : allAttractions) {
 			for (VisitedLocation userLocation : locations) {
 				if (nearAttraction(userLocation, attraction)) {
 					// If user hasn't got the reward yet:

@@ -1,7 +1,7 @@
-package tourGuide.dto;
+package com.lime.feignclient.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lime.feignclient.models.Location;
+import com.lime.feignclient.model.Location;
 
 import java.util.List;
 

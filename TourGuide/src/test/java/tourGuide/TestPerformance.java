@@ -13,17 +13,15 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.lime.feignclient.models.VisitedLocation;
-import com.lime.feignclient.models.Attraction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.lime.feignclient.model.VisitedLocation;
+import com.lime.feignclient.model.Attraction;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.GpsUtilFeignService;
 import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
-import tourGuide.user.UserReward;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.user.UserReward;
 
 public class TestPerformance {
 	

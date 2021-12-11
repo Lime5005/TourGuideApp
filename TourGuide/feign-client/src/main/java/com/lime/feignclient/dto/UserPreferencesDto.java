@@ -1,4 +1,4 @@
-package tourGuide.dto;
+package com.lime.feignclient.dto;
 
 import org.javamoney.moneta.Money;
 

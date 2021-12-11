@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import com.lime.feignclient.models.Attraction;
+import com.lime.feignclient.dto.AttractionDto;
+import com.lime.feignclient.model.Attraction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,8 +17,8 @@ import tourGuide.service.GpsUtilFeignService;
 import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import tourGuide.user.User;
-import com.lime.feignclient.models.Provider;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.model.Provider;
 
 public class TestTourGuideService {
 

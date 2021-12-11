@@ -39,14 +39,20 @@ dependencies {
     implementation project(':reward-provider')
     implementation project(':pricer-provider')
     implementation project(':feign-client')
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.2.1'
 
 
-    implementation(name:'gpsUtil', ext:'jar')
-    implementation(name:'RewardCentral', ext:'jar')
-    implementation(name:'TripPricer', ext:'jar')
+//    implementation(name:'gpsUtil', ext:'jar')
+//    implementation(name:'RewardCentral', ext:'jar')
+//    implementation(name:'TripPricer', ext:'jar')
 
-    testImplementation "junit:junit:4.13"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
+}
+
+jar {
+    enabled = true
 }
 
 

@@ -1,7 +1,8 @@
 package com.lime.feignclient.api;
 
-import com.lime.feignclient.models.Provider;
+import com.lime.feignclient.model.Provider;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 

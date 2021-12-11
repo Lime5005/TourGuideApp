@@ -1,8 +1,10 @@
-package tourGuide.dto;
+package com.lime.feignclient.dto;
 
-import gpsUtil.location.Location;
+import com.lime.feignclient.model.Location;
 
-public class RecommendAttraction {
+import java.io.Serializable;
+
+public class RecommendAttraction implements Serializable {
     private String name;
     private Location location;
     private double distance;

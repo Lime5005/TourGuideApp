@@ -21,6 +21,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation files('libs/TripPricer.jar')
     implementation project(':feign-client')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.6.RELEASE'
+
 }
 
 dependencyManagement {
@@ -31,4 +36,8 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    enabled = true
 }

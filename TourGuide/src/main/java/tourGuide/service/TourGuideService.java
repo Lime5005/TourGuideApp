@@ -7,23 +7,24 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.lime.feignclient.models.Attraction;
-import com.lime.feignclient.models.Location;
-import com.lime.feignclient.models.Provider;
-import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.dto.AttractionDto;
+import com.lime.feignclient.model.Attraction;
+import com.lime.feignclient.model.Location;
+import com.lime.feignclient.model.Provider;
+import com.lime.feignclient.model.VisitedLocation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import tourGuide.dto.RecommendAttraction;
-import tourGuide.dto.RecommendAttractionsDto;
-import tourGuide.dto.UserPreferencesDto;
+import com.lime.feignclient.dto.RecommendAttraction;
+import com.lime.feignclient.dto.RecommendAttractionsDto;
+import com.lime.feignclient.dto.UserPreferencesDto;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
-import tourGuide.user.User;
-import tourGuide.user.UserPreferences;
-import tourGuide.user.UserReward;
+import com.lime.feignclient.user.User;
+import com.lime.feignclient.user.UserPreferences;
+import com.lime.feignclient.user.UserReward;
 
 @Service
 public class TourGuideService {
@@ -135,11 +136,11 @@ public class TourGuideService {
 
 		User user = getUser(userName);
 		VisitedLocation visitedLocation = getUser(userName).getLastVisitedLocation();
-		com.lime.feignclient.models.Location location = visitedLocation.location;
+		com.lime.feignclient.model.Location location = visitedLocation.location;
 		List<RecommendAttraction> attractions = new CopyOnWriteArrayList<>();
 
 		List<Attraction> nearByAttractions = getNearByAttractions(visitedLocation);
-		for (com.lime.feignclient.models.Attraction attraction : nearByAttractions) {
+		for (Attraction attraction : nearByAttractions) {
 			RecommendAttraction recommendAttraction = new RecommendAttraction();
 			recommendAttraction.setName(attraction.attractionName);
 			recommendAttraction.setLocation(attraction.latitude, attraction.longitude);
@@ -153,8 +154,8 @@ public class TourGuideService {
 		return recommendAttractionsDto;
 	}
 
-	public List<com.lime.feignclient.models.Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<com.lime.feignclient.models.Attraction> attractions = gpsUtilService.getAttractions();
+	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+		List<Attraction> attractions = gpsUtilService.getAttractions();
 		// Recommend the closest five tourist attractions:
 		return attractions.stream()
 				.sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))

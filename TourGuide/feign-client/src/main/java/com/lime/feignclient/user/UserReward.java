@@ -1,20 +1,20 @@
-package tourGuide.user;
+package com.lime.feignclient.user;
 
-import com.lime.feignclient.models.Attraction;
-import com.lime.feignclient.models.VisitedLocation;
+import com.lime.feignclient.model.Attraction;
+import com.lime.feignclient.model.VisitedLocation;
 
 public class UserReward {
 
 	public final VisitedLocation visitedLocation;
 	public final Attraction attraction;
 	private int rewardPoints;
-	public UserReward(VisitedLocation visitedLocation, com.lime.feignclient.models.Attraction attraction, int rewardPoints) {
+	public UserReward(VisitedLocation visitedLocation, com.lime.feignclient.model.Attraction attraction, int rewardPoints) {
 		this.visitedLocation = visitedLocation;
 		this.attraction = attraction;
 		this.rewardPoints = rewardPoints;
 	}
 	
-	public UserReward(VisitedLocation visitedLocation, com.lime.feignclient.models.Attraction attraction) {
+	public UserReward(VisitedLocation visitedLocation, Attraction attraction) {
 		this.visitedLocation = visitedLocation;
 		this.attraction = attraction;
 	}
