@@ -1,20 +1,20 @@
 package com.lime.rewardprovider.controller;
 
+import com.lime.feignclient.model.Attraction;
+import com.lime.feignclient.user.User;
 import com.lime.rewardprovider.service.RewardProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 @RestController
 public class RewardController {
     @Autowired
     private RewardProviderService providerService;
 
-    @PostMapping("/rewardpoints/{attractionId}/{userId}")
-    public int getAttractionRewardPoints(@PathVariable UUID attractionId, @PathVariable UUID userId) {
-        return providerService.getAttractionRewardPoints(attractionId, userId);
+    @GetMapping("/rewardpoints")
+    public int getAttractionRewardPoints(@RequestParam Attraction attraction, @RequestParam User user) {
+//        return providerService.getAttractionRewardPoints(attractionId, userId);
+        return providerService.getAttractionRewardPoints(attraction, user);
     }
 }

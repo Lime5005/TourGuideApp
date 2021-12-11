@@ -1,11 +1,11 @@
 package com.lime.gpsprovider;
 
 
-import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@SpringBootTest
+//@SpringBootTest
 public class GpsProviderTest {
 
 //    @Autowired

@@ -4,7 +4,6 @@ package com.lime.feignclient.api;
 import com.lime.feignclient.model.Attraction;
 import com.lime.feignclient.model.VisitedLocation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

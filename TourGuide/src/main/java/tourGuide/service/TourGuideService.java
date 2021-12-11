@@ -7,7 +7,6 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.lime.feignclient.dto.AttractionDto;
 import com.lime.feignclient.model.Attraction;
 import com.lime.feignclient.model.Location;
 import com.lime.feignclient.model.Provider;

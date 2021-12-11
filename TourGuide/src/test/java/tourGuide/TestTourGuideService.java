@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import com.lime.feignclient.dto.AttractionDto;
 import com.lime.feignclient.model.Attraction;
 import org.junit.Before;
 import org.junit.Test;
