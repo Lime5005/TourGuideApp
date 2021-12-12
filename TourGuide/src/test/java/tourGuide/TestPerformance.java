@@ -9,19 +9,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.lime.feignclient.model.VisitedLocation;
-import com.lime.feignclient.model.Attraction;
+import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
-import tourGuide.service.GpsUtilFeignService;
-import tourGuide.service.RewardFeignService;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
-import com.lime.feignclient.user.User;
-import com.lime.feignclient.user.UserReward;
+import tourGuide.user.User;
+import tourGuide.user.UserReward;
+
 
 public class TestPerformance {
 	
@@ -52,8 +53,8 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeTrackLocation() {
-		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
@@ -77,8 +78,8 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeGetRewards() {
-		GpsUtilFeignService gpsUtil = new GpsUtilFeignService();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardFeignService());
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100000);

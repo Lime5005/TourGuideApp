@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import com.lime.feignclient.dto.AttractionDto;
-import com.lime.feignclient.model.Attraction;
-import com.lime.feignclient.model.Location;
-import com.lime.feignclient.model.VisitedLocation;
+import com.lime.gpsprovider.service.GpsUtilService;
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
 import org.springframework.stereotype.Service;
-import com.lime.feignclient.user.User;
-import com.lime.feignclient.user.UserReward;
+import rewardCentral.RewardCentral;
+import tourGuide.user.User;
+import tourGuide.user.UserReward;
 
 @Service
 public class RewardsService {
@@ -32,12 +34,12 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtilFeignService gpsUtil;
-	private final RewardFeignService rewardFeignService;
+	private final GpsUtil gpsUtil;
+	private final RewardCentral rewardCentral;
 	
-	public RewardsService(GpsUtilFeignService gpsUtil, RewardFeignService rewardFeignService) {
+	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
-		this.rewardFeignService = rewardFeignService;
+		this.rewardCentral = rewardCentral;
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {

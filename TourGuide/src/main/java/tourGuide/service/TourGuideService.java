@@ -7,35 +7,37 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.lime.feignclient.model.Attraction;
-import com.lime.feignclient.model.Location;
-import com.lime.feignclient.model.Provider;
-import com.lime.feignclient.model.VisitedLocation;
 
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
+import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.lime.feignclient.dto.RecommendAttraction;
-import com.lime.feignclient.dto.RecommendAttractionsDto;
-import com.lime.feignclient.dto.UserPreferencesDto;
+import tourGuide.dto.RecommendAttraction;
+import tourGuide.dto.RecommendAttractionsDto;
+import tourGuide.dto.UserPreferencesDto;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
-import com.lime.feignclient.user.User;
-import com.lime.feignclient.user.UserPreferences;
-import com.lime.feignclient.user.UserReward;
+import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
+import tourGuide.user.UserReward;
+import tripPricer.Provider;
+import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
-	private final GpsUtilFeignService gpsUtilService;
+	private final GpsUtil gpsUtil;
 	private final RewardsService rewardsService;
-	private final PricerFeignService tripPricer = new PricerFeignService();
+	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
 	
-	public TourGuideService(GpsUtilFeignService gpsUtilService, RewardsService rewardsService) {
-		this.gpsUtilService = gpsUtilService;
+	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
+		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
 		
 		if(testMode) {
@@ -90,17 +92,17 @@ public class TourGuideService {
 			internalUserMap.put(user.getUserName(), user);
 		}
 	}
-	
+
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(), 
+		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
 				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
 		return providers;
 	}
 
 	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
-		return CompletableFuture.supplyAsync(() -> gpsUtilService.getUserLocation(user.getUserId()), executorService)
+		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executorService)
 				.thenApply(visitedLocation -> {
 					user.addToVisitedLocations(visitedLocation);
 					rewardsService.calculateRewards(user);
@@ -135,7 +137,7 @@ public class TourGuideService {
 
 		User user = getUser(userName);
 		VisitedLocation visitedLocation = getUser(userName).getLastVisitedLocation();
-		com.lime.feignclient.model.Location location = visitedLocation.location;
+		Location location = visitedLocation.location;
 		List<RecommendAttraction> attractions = new CopyOnWriteArrayList<>();
 
 		List<Attraction> nearByAttractions = getNearByAttractions(visitedLocation);
@@ -154,7 +156,7 @@ public class TourGuideService {
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> attractions = gpsUtilService.getAttractions();
+		List<Attraction> attractions = gpsUtil.getAttractions();
 		// Recommend the closest five tourist attractions:
 		return attractions.stream()
 				.sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))

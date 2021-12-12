@@ -1,13 +1,13 @@
-package com.lime.feignclient.user;
+package tourGuide.user;
+
+
+import gpsUtil.location.VisitedLocation;
+import tripPricer.Provider;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import com.lime.feignclient.dto.UserDto;
-import com.lime.feignclient.model.VisitedLocation;
-import com.lime.feignclient.model.Provider;
 
 public class User {
 	private final UUID userId;
@@ -24,16 +24,6 @@ public class User {
 		this.userName = userName;
 		this.phoneNumber = phoneNumber;
 		this.emailAddress = emailAddress;
-	}
-
-	public User(UserDto userDto) {
-		this.userId = userDto.getUserId();
-		this.userName = userDto.getUserName();
-		this.phoneNumber = userDto.getPhoneNumber();
-		this.emailAddress = userDto.getEmailAddress();
-		this.latestLocationTimestamp = userDto.getLatestLocationTimestamp();
-		this.visitedLocations = userDto.getVisitedLocations();
-		this.userRewards = userDto.getUserRewards();
 	}
 	
 	public UUID getUserId() {

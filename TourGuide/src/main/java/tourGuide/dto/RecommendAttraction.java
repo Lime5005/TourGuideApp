@@ -1,6 +1,7 @@
-package com.lime.feignclient.dto;
+package tourGuide.dto;
 
-import com.lime.feignclient.model.Location;
+
+import gpsUtil.location.Location;
 
 import java.io.Serializable;
 

@@ -42,9 +42,9 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.2.1'
 
 
-//    implementation(name:'gpsUtil', ext:'jar')
-//    implementation(name:'RewardCentral', ext:'jar')
-//    implementation(name:'TripPricer', ext:'jar')
+    implementation(name:'gpsUtil', ext:'jar')
+    implementation(name:'RewardCentral', ext:'jar')
+    implementation(name:'TripPricer', ext:'jar')
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
