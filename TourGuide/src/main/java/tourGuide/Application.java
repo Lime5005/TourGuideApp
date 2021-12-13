@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import java.util.Locale;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = {"com.lime.feignclient"})
+@EnableFeignClients
 public class Application {
 
     public static void main(String[] args) {

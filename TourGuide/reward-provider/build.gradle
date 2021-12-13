@@ -13,12 +13,12 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "Greenwich.SR2")
+    set('springCloudVersion', "2021.0.0")
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.5'
     implementation files('libs/RewardCentral.jar')
     implementation project(':feign-client')
     implementation project(':gps-provider')

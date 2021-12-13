@@ -1,7 +1,5 @@
 package tourGuide;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Locale;
@@ -9,9 +7,11 @@ import java.util.UUID;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
-import org.junit.Before;
-import org.junit.Test;
 
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -19,9 +19,12 @@ import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import tripPricer.Provider;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class TestTourGuideService {
 
-	@Before
+	@BeforeEach
 	public void init() {
 		Locale.setDefault(Locale.US);
 	}
@@ -34,7 +37,7 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		tourGuideService.trackUserLocation(user).join();
+		tourGuideService.trackUserLocation(user);
 		tourGuideService.tracker.stopTracking();
 		assertTrue(user.getLastVisitedLocation().userId.equals(user.getUserId()));
 	}
@@ -90,7 +93,7 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		tourGuideService.trackUserLocation(user).join();
+		tourGuideService.trackUserLocation(user);
 		
 		tourGuideService.tracker.stopTracking();
 		
@@ -105,7 +108,7 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		tourGuideService.trackUserLocation(user).join();
+		tourGuideService.trackUserLocation(user);
 		
 		List<Attraction> attractions = tourGuideService.getNearByAttractions(user.getLastVisitedLocation());
 		
