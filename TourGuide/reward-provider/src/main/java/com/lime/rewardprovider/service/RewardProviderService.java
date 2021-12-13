@@ -14,6 +14,6 @@ public class RewardProviderService {
 
     public int getAttractionRewardPoints(UUID attractionId, UUID userId) {
        return rewardCentral.getAttractionRewardPoints(attractionId, userId);
-}
+    }
 
 }

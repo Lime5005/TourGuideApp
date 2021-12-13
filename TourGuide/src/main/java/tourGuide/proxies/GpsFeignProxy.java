@@ -1,6 +1,8 @@
 package tourGuide.proxies;
 
 
+import com.lime.gpsprovider.dto.AttractionDto;
+import com.lime.gpsprovider.dto.VisitedLocationDto;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,8 +19,8 @@ import java.util.UUID;
 public interface GpsFeignProxy {
 
     @GetMapping("/gps/attractions")
-    List<Attraction> getAttractions();
+    List<AttractionDto> getAttractions();
 
     @PostMapping("/gps/userLocation/{id}")
-    VisitedLocation getUserLocation(@PathVariable UUID id);
+    VisitedLocationDto getUserLocation(@PathVariable UUID id);
 }

@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
+import com.lime.gpsprovider.dto.AttractionDto;
+import com.lime.gpsprovider.dto.VisitedLocationDto;
+import com.lime.pricerprovider.dto.ProviderDto;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
@@ -53,15 +56,15 @@ public class TourGuideService {
 		addShutDownHook();
 	}
 
-	public List<Attraction> getAllAttractions() {
+	public List<AttractionDto> getAllAttractions() {
 		return gpsFeignProxy.getAttractions();
 	}
 
-	public VisitedLocation getUserLocation(UUID userId) {
+	public VisitedLocationDto getUserLocation(UUID userId) {
 		return gpsFeignProxy.getUserLocation(userId);
 	}
 
-	public List<Provider> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) {
+	public List<ProviderDto> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) {
 		return pricerFeignProxy.getPrice(apiKey, attractionId, adults, children, nightsStay, rewardsPoints);
 	}
 
@@ -109,18 +112,18 @@ public class TourGuideService {
 		}
 	}
 
-	public List<Provider> getTripDeals(User user) {
+	public List<ProviderDto> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
+		List<ProviderDto> providers = getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
 				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
 		return providers;
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
-		CompletableFuture<VisitedLocation> future = CompletableFuture.supplyAsync(() -> getUserLocation(user.getUserId()), executorService)
-				.thenApply(visitedLocation -> {
-					user.addToVisitedLocations(visitedLocation);
+		CompletableFuture<VisitedLocationDto> future = CompletableFuture.supplyAsync(() -> getUserLocation(user.getUserId()), executorService)
+				.thenApply(visitedLocationDto -> {
+					user.addToVisitedLocations(visitedLocationDto);
 					rewardsService.calculateRewards(user);
 					return visitedLocation;
 				});
