@@ -10,8 +10,11 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rewardCentral.RewardCentral;
+import tourGuide.proxies.GpsFeignProxy;
+import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.user.User;
 import tourGuide.user.UserReward;
 
@@ -34,12 +37,20 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
-	private final RewardCentral rewardCentral;
+	private final GpsFeignProxy gpsFeignProxy;
+	private final RewardFeignProxy rewardFeignProxy;
 	
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
-		this.gpsUtil = gpsUtil;
-		this.rewardCentral = rewardCentral;
+	public RewardsService(GpsFeignProxy gpsFeignProxy, RewardFeignProxy rewardFeignProxy) {
+		this.gpsFeignProxy = gpsFeignProxy;
+		this.rewardFeignProxy = rewardFeignProxy;
+	}
+
+	public List<Attraction> getAllAttractions() {
+		return gpsFeignProxy.getAttractions();
+	}
+
+	public int getAttractionRewardPoints(UUID attractionId, UUID userId) {
+		return rewardFeignProxy.getAttractionRewardPoints(attractionId, userId);
 	}
 	
 	public void setProximityBuffer(int proximityBuffer) {
@@ -52,8 +63,9 @@ public class RewardsService {
 
 	public List<UserReward> calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> allAttractions = gpsUtil.getAttractions();
- 		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
+//		List<Attraction> allAttractions = gpsUtil.getAttractions();
+		List<Attraction> allAttractions = getAllAttractions();
+		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
 		List<UserReward> rewards = new ArrayList<>();
 		for (Attraction attraction : allAttractions) {
 			for (VisitedLocation userLocation : locations) {
@@ -84,16 +96,6 @@ public class RewardsService {
 	
 	public int getRewardPoints(Attraction attraction, User user) {
 		return getAttractionRewardPoints(attraction.attractionId, user.getUserId());
-	}
-
-	private int getAttractionRewardPoints(UUID attractionId, UUID userId) {
-		try {
-			TimeUnit.MILLISECONDS.sleep((long)ThreadLocalRandom.current().nextInt(1, 1000));
-		} catch (InterruptedException var4) {
-		}
-
-		int randomInt = ThreadLocalRandom.current().nextInt(1, 1000);
-		return randomInt;
 	}
 	
 	public double getDistance(Location loc1, Location loc2) {

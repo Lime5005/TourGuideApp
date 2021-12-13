@@ -20,24 +20,27 @@ import tourGuide.dto.RecommendAttraction;
 import tourGuide.dto.RecommendAttractionsDto;
 import tourGuide.dto.UserPreferencesDto;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.proxies.GpsFeignProxy;
+import tourGuide.proxies.PricerFeignProxy;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
 import tripPricer.Provider;
-import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
-	private final GpsUtil gpsUtil;
+//	private final GpsUtil gpsUtil;
+	private final GpsFeignProxy gpsFeignProxy;
 	private final RewardsService rewardsService;
-	private final TripPricer tripPricer = new TripPricer();
+//	private final TripPricer tripPricer = new TripPricer();
+	private PricerFeignProxy pricerFeignProxy;
 	public final Tracker tracker;
 	boolean testMode = true;
 	
-	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
-		this.gpsUtil = gpsUtil;
+	public TourGuideService(GpsFeignProxy gpsFeignProxy, RewardsService rewardsService) {
+		this.gpsFeignProxy = gpsFeignProxy;
 		this.rewardsService = rewardsService;
 		
 		if(testMode) {
@@ -49,6 +52,19 @@ public class TourGuideService {
 		tracker = new Tracker(this);
 		addShutDownHook();
 	}
+
+	public List<Attraction> getAllAttractions() {
+		return gpsFeignProxy.getAttractions();
+	}
+
+	public VisitedLocation getUserLocation(UUID userId) {
+		return gpsFeignProxy.getUserLocation(userId);
+	}
+
+	public List<Provider> getPrice(String apiKey, UUID attractionId, int adults, int children, int nightsStay, int rewardsPoints) {
+		return pricerFeignProxy.getPrice(apiKey, attractionId, adults, children, nightsStay, rewardsPoints);
+	}
+
 
 	ThreadPoolExecutor executorService = new ThreadPoolExecutor(
 			5,
@@ -95,14 +111,14 @@ public class TourGuideService {
 
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
+		List<Provider> providers = getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
 				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
 		return providers;
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
-		CompletableFuture<VisitedLocation> future = CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executorService)
+		CompletableFuture<VisitedLocation> future = CompletableFuture.supplyAsync(() -> getUserLocation(user.getUserId()), executorService)
 				.thenApply(visitedLocation -> {
 					user.addToVisitedLocations(visitedLocation);
 					rewardsService.calculateRewards(user);
@@ -158,7 +174,7 @@ public class TourGuideService {
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> attractions = gpsUtil.getAttractions();
+		List<Attraction> attractions = getAllAttractions();
 		// Recommend the closest five tourist attractions:
 		return attractions.stream()
 				.sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))
