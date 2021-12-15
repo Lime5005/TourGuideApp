@@ -9,6 +9,5 @@
 
 rootProject.name = 'TourGuide'
 include 'gps-provider'
-include 'feign-client'
 include 'reward-provider'
 include 'pricer-provider'

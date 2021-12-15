@@ -1,8 +1,8 @@
 package com.lime.gpsprovider.controller;
 
-import com.lime.gpsprovider.dto.AttractionDto;
-import com.lime.gpsprovider.dto.VisitedLocationDto;
 import com.lime.gpsprovider.service.GpsUtilService;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +17,12 @@ public class GpsUtilController {
     private GpsUtilService gpsUtilService;
 
     @GetMapping("/attractions")
-    public List<AttractionDto> getAttractions() {
+    public List<Attraction> getAttractions() {
         return gpsUtilService.getAttractions();
     }
 
-    @PostMapping("/userLocation/{id}")
-    public VisitedLocationDto getUserLocation(@PathVariable UUID id) {
+    @GetMapping("/userLocation/{id}")
+    public VisitedLocation getUserLocation(@PathVariable UUID id) {
         return gpsUtilService.getUserLocation(id);
     }
 

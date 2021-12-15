@@ -3,8 +3,6 @@ package tourGuide.controller;
 import java.util.List;
 import java.util.Map;
 
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +10,12 @@ import com.jsoniter.output.JsonStream;
 
 import tourGuide.dto.RecommendAttractionsDto;
 import tourGuide.dto.UserPreferencesDto;
+import tourGuide.model.location.Location;
+import tourGuide.model.location.VisitedLocation;
+import tourGuide.model.tripPricer.Provider;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import tourGuide.user.UserPreferences;
-import tripPricer.Provider;
 
 
 @RestController

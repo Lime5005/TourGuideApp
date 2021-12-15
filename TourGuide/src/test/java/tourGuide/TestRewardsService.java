@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import rewardCentral.RewardCentral;
+import org.springframework.boot.test.context.SpringBootTest;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.location.Attraction;
+import tourGuide.model.location.VisitedLocation;
 import tourGuide.proxies.GpsFeignProxy;
+import tourGuide.proxies.PricerFeignProxy;
 import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -27,12 +25,16 @@ import tourGuide.user.UserReward;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 public class TestRewardsService {
 	@Autowired
 	private GpsFeignProxy gpsFeignProxy;
 
 	@Autowired
 	private RewardFeignProxy rewardFeignProxy;
+
+	@Autowired
+	private PricerFeignProxy pricerFeignProxy;
 
 	@BeforeEach
 	public void init() {
@@ -41,10 +43,9 @@ public class TestRewardsService {
 
 	@Test
 	public void userGetRewards() {
-//		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsFeignProxy.getAttractions().get(0);
@@ -58,7 +59,6 @@ public class TestRewardsService {
 	
 	@Test
 	public void isWithinAttractionProximity() {
-//		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		Attraction attraction = gpsFeignProxy.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
@@ -66,12 +66,11 @@ public class TestRewardsService {
 	
 	@Test
 	public void nearAllAttractions() {
-//		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 		
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));

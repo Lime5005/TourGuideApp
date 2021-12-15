@@ -8,18 +8,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
 import org.apache.commons.lang3.time.StopWatch;
 
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import rewardCentral.RewardCentral;
+import org.springframework.boot.test.context.SpringBootTest;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.location.Attraction;
+import tourGuide.model.location.VisitedLocation;
 import tourGuide.proxies.GpsFeignProxy;
+import tourGuide.proxies.PricerFeignProxy;
 import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -28,6 +28,7 @@ import tourGuide.user.UserReward;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 public class TestPerformance {
 	
 	/*
@@ -55,6 +56,9 @@ public class TestPerformance {
 	@Autowired
 	private RewardFeignProxy rewardFeignProxy;
 
+	@Autowired
+	private PricerFeignProxy pricerFeignProxy;
+
 	@BeforeEach
 	public void init() {
 		Locale.setDefault(Locale.US);
@@ -65,8 +69,8 @@ public class TestPerformance {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(10000);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		InternalTestHelper.setInternalUserNumber(100000);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideService.getAllUsers();
@@ -91,10 +95,10 @@ public class TestPerformance {
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper.setInternalUserNumber(10000);
+		InternalTestHelper.setInternalUserNumber(100000);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		ExecutorService executorService = Executors.newFixedThreadPool(100);
 	    Attraction attraction = gpsFeignProxy.getAttractions().get(0);

@@ -5,23 +5,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-import gpsUtil.location.Attraction;
-
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import tourGuide.helper.InternalTestHelper;
+import tourGuide.model.location.Attraction;
+import tourGuide.model.tripPricer.Provider;
 import tourGuide.proxies.GpsFeignProxy;
+import tourGuide.proxies.PricerFeignProxy;
 import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
-import tripPricer.Provider;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 public class TestTourGuideService {
 
 	@Autowired
@@ -29,6 +31,9 @@ public class TestTourGuideService {
 
 	@Autowired
 	private RewardFeignProxy rewardFeignProxy;
+
+	@Autowired
+	private PricerFeignProxy pricerFeignProxy;
 
 	@BeforeEach
 	public void init() {
@@ -40,7 +45,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		tourGuideService.trackUserLocation(user);
@@ -53,7 +58,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -75,7 +80,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -96,7 +101,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		tourGuideService.trackUserLocation(user);
@@ -111,7 +116,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		tourGuideService.trackUserLocation(user);
@@ -128,7 +133,7 @@ public class TestTourGuideService {
 //		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 

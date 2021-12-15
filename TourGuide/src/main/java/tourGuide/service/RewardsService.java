@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.*;
 
-import com.lime.gpsprovider.service.GpsUtilService;
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rewardCentral.RewardCentral;
+import tourGuide.model.location.Attraction;
+import tourGuide.model.location.Location;
+import tourGuide.model.location.VisitedLocation;
 import tourGuide.proxies.GpsFeignProxy;
 import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.user.User;
@@ -63,7 +59,6 @@ public class RewardsService {
 
 	public List<UserReward> calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
-//		List<Attraction> allAttractions = gpsUtil.getAttractions();
 		List<Attraction> allAttractions = getAllAttractions();
 		List<VisitedLocation> locations = new CopyOnWriteArrayList<>(userLocations);
 		List<UserReward> rewards = new ArrayList<>();
@@ -85,11 +80,11 @@ public class RewardsService {
 
 		return user.getUserRewards();
 	}
-	
+
 	public boolean isWithinAttractionProximity(Attraction attraction, Attraction location) {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
-	
+
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
