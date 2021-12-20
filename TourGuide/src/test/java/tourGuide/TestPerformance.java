@@ -2,11 +2,7 @@ package tourGuide;
 
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -24,7 +20,6 @@ import tourGuide.proxies.RewardFeignProxy;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
-import tourGuide.user.UserReward;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -66,7 +61,6 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeTrackLocation() {
-//		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(100000);
@@ -78,8 +72,7 @@ public class TestPerformance {
 	    StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		ExecutorService executorService = Executors.newFixedThreadPool(100);
-		allUsers.stream().map(user -> CompletableFuture.supplyAsync(() -> tourGuideService.trackUserLocation(user), executorService));
+		allUsers.parallelStream().map(tourGuideService::trackUserLocation);
 
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
@@ -91,7 +84,6 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeGetRewards() {
-//		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsFeignProxy, rewardFeignProxy);
 
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
@@ -100,16 +92,13 @@ public class TestPerformance {
 		stopWatch.start();
 		TourGuideService tourGuideService = new TourGuideService(gpsFeignProxy, rewardsService, pricerFeignProxy);
 
-		ExecutorService executorService = Executors.newFixedThreadPool(100);
 	    Attraction attraction = gpsFeignProxy.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = tourGuideService.getAllUsers();
 
 
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-
-		List<CompletableFuture<List<UserReward>>> collect = allUsers.stream().map(user -> CompletableFuture.supplyAsync(() -> rewardsService.calculateRewards(user), executorService)).collect(Collectors.toList());
-		collect.stream().map(CompletableFuture::join).collect(Collectors.toList());
+		allUsers.parallelStream().forEach(rewardsService::calculateRewards);
 
 		for(User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
