@@ -42,9 +42,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.0.5'
     implementation group: 'org.javamoney', name: 'moneta', version: '1.3'
     implementation group: 'com.jsoniter', name: 'jsoniter', version: '0.9.23'
-    implementation project(':gps-provider')
-    implementation project(':reward-provider')
-    implementation project(':pricer-provider')
+//    implementation project(':gps-provider')
+//    implementation project(':reward-provider')
+//    implementation project(':pricer-provider')
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.2.1'
 
 
