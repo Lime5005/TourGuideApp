@@ -26,7 +26,9 @@ public class GpsControllerTest {
 
     @Test
     public void testGetUserLocation() {
-        VisitedLocation userLocation = gpsUtilController.getUserLocation(UUID.randomUUID());
+        UUID uuid = UUID.randomUUID();
+        VisitedLocation userLocation = gpsUtilController.getUserLocation(uuid);
+        System.out.println(uuid);//63029982-4a15-413d-acf4-69a7a583afe6
         Assertions.assertNotNull(userLocation);
     }
 

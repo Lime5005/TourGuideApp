@@ -16,7 +16,9 @@ public class PricerControllerTest {
 
     @Test
     public void testGetProviders() {
-        List<Provider> providers = pricerController.getPrice("test", UUID.randomUUID(), 2, 3, 3, 3);
+        UUID uuid = UUID.randomUUID();
+        System.out.println("uuid = " + uuid);//uuid = 45f928e7-b54c-4d9c-a297-fdddb7ddfacc
+        List<Provider> providers = pricerController.getPrice("test", uuid, 2, 3, 3, 3);
         Assertions.assertNotNull(providers);
         Assertions.assertEquals(providers.size(), 5);
     }

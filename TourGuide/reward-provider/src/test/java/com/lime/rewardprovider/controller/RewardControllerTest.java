@@ -14,7 +14,11 @@ public class RewardControllerTest {
 
     @Test
     public void testGetRewardPoints() {
-        int rewardPoints = rewardController.getAttractionRewardPoints(UUID.randomUUID(), UUID.randomUUID());
+        UUID uuid1 = UUID.randomUUID();
+        System.out.println("uuid1 = " + uuid1);//uuid1 = 3e134199-fe04-41c7-989f-d353c1c16c65
+        UUID uuid2 = UUID.randomUUID();
+        System.out.println("uuid2 = " + uuid2);//uuid2 = e76d2799-c84e-477e-a186-1874b36ce647
+        int rewardPoints = rewardController.getAttractionRewardPoints(uuid1, uuid2);
         System.out.println("rewardPoints = " + rewardPoints);//rewardPoints = 323
         Assertions.assertNotNull(rewardPoints);
     }

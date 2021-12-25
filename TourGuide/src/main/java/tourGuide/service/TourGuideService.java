@@ -137,21 +137,29 @@ public class TourGuideService {
 		return getUser(userName).getUserPreferences();
 	}
 
-	public UserPreferences updateUserPreferences(UserPreferencesDto userPreferencesDto) {
-		UserPreferences newUserPreferences = new UserPreferences();
-		newUserPreferences.setAttractionProximity(userPreferencesDto.getAttractionProximity());
-		newUserPreferences.setHighPricePoint(userPreferencesDto.getHighPricePoint());
-		newUserPreferences.setLowerPricePoint(userPreferencesDto.getLowerPricePoint());
-		newUserPreferences.setTicketQuantity(userPreferencesDto.getTicketQuantity());
-		newUserPreferences.setTripDuration(userPreferencesDto.getTripDuration());
-		newUserPreferences.setNumberOfAdults(userPreferencesDto.getNumberOfAdults());
-		newUserPreferences.setNumberOfChildren(userPreferencesDto.getNumberOfChildren());
-
-		String userName = userPreferencesDto.getUserName();
+	public UserPreferences updateUserPreferences(UserPreferencesDto newUserPreferences) {
+		String userName = newUserPreferences.getUserName();
 		User user = getUser(userName);
-		user.setUserPreferences(newUserPreferences);
-
-		return newUserPreferences;
+		UserPreferences oldUserPreferences = user.getUserPreferences();
+		if (newUserPreferences.getHighPricePoint() != null) {
+			oldUserPreferences.setHighPricePoint(newUserPreferences.getHighPricePoint());
+		}
+		if (newUserPreferences.getLowerPricePoint() != null) {
+			oldUserPreferences.setLowerPricePoint(newUserPreferences.getLowerPricePoint());
+		}
+		if (newUserPreferences.getNumberOfAdults() >= 0) {
+			oldUserPreferences.setNumberOfAdults(newUserPreferences.getNumberOfAdults());
+		}
+		if (newUserPreferences.getNumberOfChildren() >= 0) {
+			oldUserPreferences.setNumberOfChildren(newUserPreferences.getNumberOfChildren());
+		}
+		if (newUserPreferences.getTripDuration() >= 0) {
+			oldUserPreferences.setTripDuration(newUserPreferences.getTripDuration());
+		}
+		if (newUserPreferences.getTicketQuantity() >= 0) {
+			oldUserPreferences.setTicketQuantity(newUserPreferences.getTicketQuantity());
+		}
+		return oldUserPreferences;
 	}
 
 	public RecommendAttractionsDto getRecommendAttractions(String userName) {

@@ -4,20 +4,18 @@ import org.javamoney.moneta.Money;
 
 public class UserPreferencesDto {
     private String userName;
-    private int attractionProximity;
     private Money lowerPricePoint;
     private Money highPricePoint;
-    private int tripDuration;
-    private int ticketQuantity;
-    private int numberOfAdults;
-    private int numberOfChildren;
+    private int tripDuration = 0;
+    private int ticketQuantity = 0;
+    private int numberOfAdults = 0;
+    private int numberOfChildren = 0;
 
     public UserPreferencesDto() {
     }
 
-    public UserPreferencesDto(String userName, int attractionProximity, Money lowerPricePoint, Money highPricePoint, int tripDuration, int ticketQuantity, int numberOfAdults, int numberOfChildren) {
+    public UserPreferencesDto(String userName, Money lowerPricePoint, Money highPricePoint, int tripDuration, int ticketQuantity, int numberOfAdults, int numberOfChildren) {
         this.userName = userName;
-        this.attractionProximity = attractionProximity;
         this.lowerPricePoint = lowerPricePoint;
         this.highPricePoint = highPricePoint;
         this.tripDuration = tripDuration;
@@ -32,14 +30,6 @@ public class UserPreferencesDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public int getAttractionProximity() {
-        return attractionProximity;
-    }
-
-    public void setAttractionProximity(int attractionProximity) {
-        this.attractionProximity = attractionProximity;
     }
 
     public Money getLowerPricePoint() {
