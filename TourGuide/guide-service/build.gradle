@@ -17,12 +17,6 @@ plugins {
     id 'eclipse'
 }
 
-
-bootJar {
-    baseName = 'tourGuide'
-    version =  '1.0.0'
-}
-
 repositories {
     mavenCentral()
     flatDir {

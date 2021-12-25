@@ -1,0 +1,45 @@
+version: '3'
+services:
+  gps-provider:
+    container_name: gps
+    build:
+      context: gps-provider
+      dockerfile: Dockerfile
+    image: gps:1.0
+    ports:
+      - 8081:8081
+    networks:
+      - spring-cloud-network
+  pricer-provider:
+    container_name: pricer
+    build:
+      context: pricer-provider
+      dockerfile: Dockerfile
+    image: pricer:1.0
+    ports:
+      - 8083:8083
+    networks:
+      - spring-cloud-network
+  reward-provider:
+    container_name: reward
+    build:
+      context: reward-provider
+      dockerfile: Dockerfile
+    image: reward:1.0
+    ports:
+      - 8082:8082
+    networks:
+      - spring-cloud-network
+  guide-service:
+    container_name: guide
+    build:
+      context: guide-service
+      dockerfile: Dockerfile
+    image: guide:1.0
+    ports:
+      - 8080:8080
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
